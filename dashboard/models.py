@@ -10,7 +10,7 @@ class Article(models.Model):
     content = models.CharField(max_length=10000)
     status = models.IntegerField(default=0)  # 0 pending , 1 acepted , 2 rejected
     written_by = models.CharField(max_length=200)
-    edited_by = models.CharField(max_length=200)
+    edited_by = models.CharField(max_length=200, null=True)
     
     def __str__(self):
         return f"id: {self.id} title: {self.title}, written_by: {self.written_by}"
