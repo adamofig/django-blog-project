@@ -1,0 +1,14 @@
+h1 {
+    font-size: sans-serif;
+    color: "red"
+}
+
+
+body {
+    /* background: gray; */
+    padding: 20px;
+}
+
+.inline{
+    display: inline !important;
+}
