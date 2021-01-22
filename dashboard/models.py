@@ -7,7 +7,7 @@ class Article(models.Model):
     id = models.AutoField(primary_key=True)
     created_at = models.DateField()
     title = models.CharField(max_length=200)
-    content = models.CharField(max_length=1000)
+    content = models.CharField(max_length=10000)
     status = models.IntegerField(default=0)  # 0 pending , 1 acepted , 2 rejected
     written_by = models.CharField(max_length=200)
     edited_by = models.CharField(max_length=200)

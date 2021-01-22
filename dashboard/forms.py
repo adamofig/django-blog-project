@@ -5,9 +5,9 @@ from datetime import datetime
 
 class ArticleForm(forms.Form):
 
-    title = forms.CharField(label="Title", max_length=100, 
+    title = forms.CharField(label="Title", max_length=200, 
         widget=forms.TextInput(attrs={'class':'form-control'}))
-    content = forms.CharField(label="Content", max_length=100, 
+    content = forms.CharField(label="Content", max_length=10000, 
         widget=forms.Textarea(attrs={'class':'form-control'}))
     
     def save(self, written_by):

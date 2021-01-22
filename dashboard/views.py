@@ -68,7 +68,6 @@ def articles_edited(request):
             return HttpResponse("Sorry, You need editor permission <a href='/'> return </a>")
         
         articles = Article.objects.exclude(status=0)
-        print(articles)
 
         return render(request, "dashboard/articles-edited.html", {"articles": articles})
     except Exception as e:
@@ -77,8 +76,6 @@ def articles_edited(request):
 
 
 def approve_article(request, id):
-    print("Aprobando el request", id)
-    print(request)
     Article.objects.filter(pk=id).update(status=1)
     return HttpResponseRedirect('/article-approval')
 
@@ -90,28 +87,20 @@ def reject_article(request, id):
 
 
 def login_user(request):
-    print("Peticion auth")
     if request.method == 'POST':
-
-        print("Se recibió un post ")
-
         username = request.POST['username']
         password = request.POST['password']
-        user = authenticate( username=username, password=password)
+        user = authenticate(username=username, password=password)
         login(request, user)
-        print(user)
         
         if user is None: 
             return HttpResponse("Unauthorized!")
         else:
             return HttpResponseRedirect('/')
-
-        print("Registrando usuario")
     else:
         return render(request, "dashboard/login.html")
 
 
 def logout_user(request):
-    print("Log out user")
     logout(request)
     return HttpResponseRedirect('/login')
