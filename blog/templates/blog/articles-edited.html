@@ -4,20 +4,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <link rel="stylesheet" href="/static/blogtoy/style.css">
   <title>Document</title>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
     crossorigin="anonymous"></script>
-
+  <link rel="stylesheet" href="/static/blogtoy/style.css">
 </head>
 
 <body>
+
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/">Dashboard</a>
+    <a class="navbar-brand" href="/">Blog</a>
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
         <a class="nav-link" href="/article">article </a>
@@ -36,38 +36,25 @@
       {{user}}
     </span>
   </nav>
+
   <br>
-  <h1>Article Editor </h1>
+  <h1>Article Edited </h1>
 
-  {% if article%}
-  created = {{article.created_at}}
-  title = {{article.title}}
-  content = {{article.content}}
-  status = {{article.status}}
-  written_by = {{article.written_by}}
-  edited_by = {{article.edited_by}}
 
-  {% endif %}
+  {% for a in articles %}
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">id: {{a.id}} - {{a.title}} by {{a.written_by}}</h5>
 
+      {% if a.status == 1 %}
+      approved
+      {% elif a.status == 2 %}
+      Rejected
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
 
 </body>
-
-<div class='jumbotron'>
-  <br>
-  <h5> Form</h5>
-
-  <form style="padding-left: 20%; padding-right: 20%;" method="post" action="{{id}}">
-    {% csrf_token %}
-    {% for field in form %}
-    <div class='form-group'>
-      <label for="{{ field.name }}">{{ field.label }}</label>
-      <br>
-      {{ field }}
-    </div>
-    <!-- {{ form }} -->
-    {% endfor %}
-    <button class="btn btn-success" type="submit"> Save</button>
-  </form>
-</div>
 
 </html>

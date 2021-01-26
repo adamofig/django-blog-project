@@ -15,7 +15,7 @@ def welcome(request):
         'written_by', filter=Q(created_at__gt=datetime.datetime(2021, 1, 1)))
     writer_info = Article.objects.values('written_by').annotate(
         last_30_days=last_30_days).annotate(total=Count('written_by'))
-    return render(request, "dashboard/dashboard.html", {
+    return render(request, "blog/dashboard.html", {
         "articles": articles,
         "writer_info": writer_info
     })
@@ -39,7 +39,7 @@ def articles(request, id=None):
         return HttpResponseRedirect('/article')
     elif id is None:
         form = ArticleForm()
-        return render(request, "dashboard/article.html", {
+        return render(request, "blog/article.html", {
             "article": None,
             "form": form
         })
@@ -50,7 +50,7 @@ def articles(request, id=None):
             'content': article.content,
             'id': article.id
         })
-        return render(request, "dashboard/article.html", {
+        return render(request, "blog/article.html", {
             "article": article,
             "form": form,
             "id": article.id
@@ -70,7 +70,7 @@ def article_approval(request):
                 "Sorry, You need editor permission <a href='/'> return </a>")
 
         articles = Article.objects.filter(status=0)
-        return render(request, "dashboard/article-approval.html", {
+        return render(request, "blog/article-approval.html", {
             "user": request.user,
             "articles": articles
         })
@@ -95,7 +95,7 @@ def articles_edited(request):
 
         articles = Article.objects.exclude(status=0)
 
-        return render(request, "dashboard/articles-edited.html",
+        return render(request, "blog/articles-edited.html",
                       {"articles": articles})
     except Exception as e:
         print(e)
@@ -124,7 +124,7 @@ def login_user(request):
         else:
             return HttpResponseRedirect('/')
     else:
-        return render(request, "dashboard/login.html")
+        return render(request, "blog/login.html")
 
 
 def logout_user(request):

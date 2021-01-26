@@ -15,13 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from dashboard.views import welcome, articles, login_user, article_approval, logout_user, approve_article, articles_edited, reject_article
+from blog.views import welcome, articles, login_user, article_approval, logout_user, approve_article, articles_edited, reject_article
 
 urlpatterns = [
     path('', welcome),
     path('login', login_user),
     path('logout', logout_user),
-    path('dashboard', include('dashboard.urls')),
+    path('blog', include('blog.urls')),
     path('article/<int:id>', articles),
     path('article', articles),
     path('article-approval', article_approval),
