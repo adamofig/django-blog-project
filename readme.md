@@ -7,13 +7,27 @@ python manage.py runserver
 ### Init application 
 python manage.py startapp dashboard
 
-
-### super user
+### Create super user
 python manage.py createsuperuser
 
-### 
+python manage.py creat
+### Migrations 
 python manage.py migrate
 python manage.py makemigrations
+
+## Models 
+
+Article
+created_at
+title
+content
+status
+written_by (Writer)
+edited_by (Writer)
+
+Writer
+is_editor (boolean)
+name
 
 
 ### query for get writter details 
