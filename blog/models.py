@@ -21,11 +21,11 @@ class Article(models.Model):
     content = models.TextField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES,
                               default=PENDING)
-    written_by = models.OneToOneField(User,
-                                      on_delete=models.CASCADE,
-                                      related_name='written_by')
-    edited_by = models.OneToOneField(User, on_delete=models.CASCADE, null=True,
-                                     related_name='edited_by')
+    written_by = models.ForeignKey(User,
+                                   on_delete=models.CASCADE,
+                                   related_name='written_by')
+    edited_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True,
+                                  related_name='edited_by')
 
     def __str__(self):
         return f"""id: {self.id} title: {self.title}, written_by: 
@@ -33,8 +33,7 @@ class Article(models.Model):
 
 
 class Writer(models.Model):
-    user = models.OneToOneField(
-        User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     is_editor = models.BooleanField(default=False)
     name = models.CharField(max_length=200)
 

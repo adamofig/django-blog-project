@@ -5,15 +5,16 @@
 
 {% block content %}
 
-  {% for a in articles %}
+  {% for article in articles %}
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">id: {{a.id}} - {{a.title}} by {{a.written_by}}</h5>
-
-      {% if a.status == 1 %}
-      approved
-      {% elif a.status == 2 %}
-      Rejected
+      <h5 class="card-title">id: {{article.id}} - {{article.title}} by {{article.written_by}}
+       <span class="float-right">edited {{article.modified_at|date:'m-d-Y H:i'}} </span>
+      </h5>
+      {% if article.status == Article.ACCEPTED %}
+        <span class="badge bg-success">approved</span>
+      {% elif article.status == Article.REJECTED %}
+        <span class="badge bg-danger">Rejected</span>
       {% endif %}
     </div>
   </div>

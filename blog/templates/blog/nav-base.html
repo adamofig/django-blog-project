@@ -4,15 +4,14 @@
 
     {% block contentbody %}
     <nav class="navbar navbar-dark bg-primary navbar-expand-sm">
-      <a class="navbar-brand" href="#">
+      <span class="navbar-brand" href="#">
       <img class="logo" src="{% static 'images/linkgraph.png'%}">
-       </a>
+       </span>
 
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
           <a class="nav-link" href="{% url 'dashboard'%}">Dashboard</a>
         </li>
-
         <li class="nav-item active">
           <a class="nav-link" href="{% url 'article'%}">Article</a>
         </li>

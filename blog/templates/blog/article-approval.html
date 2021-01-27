@@ -14,7 +14,8 @@
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">id: {{article.id}} - {{article.title}} by {{article.written_by}}
-      created {{article.created_at|date:'m-d-Y H:i'}}
+      <span class="float-right">created {{article.created_at|date:'m-d-Y H:i'}}</span>
+      
       </h5>
 
       <form style="display: inline" action="approve/{{article.id}}" method="GET">

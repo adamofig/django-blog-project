@@ -1,24 +1,25 @@
 {% extends "blog/nav-base.html" %} 
-{% block titleTap %} Articles Editor{% endblock %}
-{% block title %} Articles Editor{% endblock %}
+{% block titleTap %} Article Editor{% endblock %}
+{% block title %} Article Editor{% endblock %}
 
 {% block content %} 
 
   {% if article %} 
-  created = {{article.created_at}} title =
-  {{article.title}} content = {{article.content}} status = {{article.status}}
-  written_by = {{article.written_by}} edited_by = {{article.edited_by}} 
+    created = {{article.created_at}} title =
+    {{article.title}} content = {{article.content}} status = {{article.status}}
+    written_by = {{article.written_by}} edited_by = {{article.edited_by}} 
   {% endif %}
 
   <form class="article-form" method="post" action="{{id}}">
-    {% csrf_token %} {% for field in form %}
+    {% csrf_token %} 
+    {% for field in form %}
     <div class="form-group">
       <label for="{{ field.name }}">{{ field.label }}</label>
       <br />
       {{ field }}
     </div>
     {% endfor %}
-    <button class="btn btn-success" type="submit">Save</button>
+    <button class="save-btn btn btn-success" type="submit">Save</button>
   </form>
 
 {% endblock %}
