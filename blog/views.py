@@ -1,10 +1,10 @@
-import datetime
+from datetime import datetime, timedelta
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 
 from .forms import ArticleForm
@@ -13,8 +13,9 @@ from .models import Article, Writer
 
 @login_required()
 def get_dashboard(request):
-    last_30_days = Count(
-        'written_by', filter=Q(created_at__gt=datetime.datetime(2021, 1, 1)))
+    date_filter = datetime.today() - timedelta(days=30)
+    last_30_days = Count('written_by', filter=Q(created_at__gt=date_filter))
+    
     writer_info = Article.objects.values('written_by').annotate(
         last_30_days=last_30_days).annotate(total=Count('written_by'))
     return render(request, "blog/dashboard.html", {
@@ -33,7 +34,7 @@ def articles(request, id=None):
             Article.objects.filter(pk=id).update(
                 title=form.data["title"],
                 content=form.data["content"],
-                edited_by=request.user.username)
+                edited_by=request.user)
         return HttpResponseRedirect('/article')
 
     elif id is None:
@@ -43,8 +44,6 @@ def articles(request, id=None):
             "form": form
         })
     else:
-        # article = Article.objects.get(pk=id)
-
         article = get_object_or_404(Article, id=id)
         form = ArticleForm(initial={
             'title': article.title,
@@ -60,44 +59,27 @@ def articles(request, id=None):
 
 @login_required()
 def article_approval(request):
-    try:
-        writer = get_object_or_404(Writer, user=request.user)
-        if not writer.is_editor:
-            return HttpResponse(
-                "Sorry, You need editor permission <a href='/'> return </a>")
+    writer = get_object_or_404(Writer, user=request.user)
+    if not writer.is_editor:
+        return not_editor(request)
 
-        articles = Article.objects.filter(status=Article.PENDING)
-        return render(request, "blog/article-approval.html", {
-            "user": request.user,
-            "articles": articles
-        })
-    except Exception as e:
-        print(e)
-        return HttpResponse(
-            "The user is authenticated but not a writer <a href='/logout'> logout</a>"
-        )
+    articles = Article.objects.filter(status=Article.PENDING)
+    return render(request, "blog/article-approval.html", {
+        "user": request.user,
+        "articles": articles
+    })
 
 
 @login_required()
 def article_edited(request):
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect('login')
+    writer = get_object_or_404(Writer, user=request.user)
+    if not writer.is_editor:
+        return not_editor(request)
 
-    user_id = request.user.id
-    try:
-        writer = Writer.objects.get(user=user_id)
-        if not writer.is_editor:
-            return HttpResponse(
-                "Sorry, You need editor permission <a href='/'> return </a>")
+    articles = Article.objects.exclude(status=Article.PENDING)
 
-        articles = Article.objects.exclude(status=0)
-
-        return render(request, "blog/article-edited.html",
-                      {"articles": articles, "Article": Article})
-    except Exception as e:
-        print(e)
-        print("Tenemos aquí un error", e)
-        return HttpResponse("Unexpetected Error")
+    return render(request, "blog/article-edited.html",
+                  {"articles": articles, "Article": Article})
 
 
 def approve_article(request, id):
@@ -118,22 +100,21 @@ def login_user(request):
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
-        print("user", user)
+
+        print(user)
         if user is not None:
             login(request, user)
+            return HttpResponseRedirect("/")
 
-            if user is None:
-                return HttpResponse("Unauthorized!", )
-            else:
-                # return HttpResponseRedirect('login')
-                return HttpResponseRedirect('/')
         else:
-            messages.error(request, 'Username or password not correct')
+            messages.error(request, 'Username or password are not correct')
             return HttpResponseRedirect('login')
-            # return HttpResponse("User not Existe ")
-
     else:
         return render(request, "blog/login.html")
+
+
+def not_editor(request):
+    return render(request, "blog/errors/not_editor.html")
 
 
 def logout_user(request):
@@ -142,4 +123,4 @@ def logout_user(request):
 
 
 def handler404(request, exception):
-    return render(request, 'blog/404.html')
+    return render(request, 'blog/errors/404.html')

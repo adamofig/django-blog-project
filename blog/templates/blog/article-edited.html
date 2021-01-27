@@ -11,6 +11,8 @@
       <h5 class="card-title">id: {{article.id}} - {{article.title}} by {{article.written_by}}
        <span class="float-right">edited {{article.modified_at|date:'m-d-Y H:i'}} </span>
       </h5>
+      <a href="{% url 'article-edit' article.pk %}" class="btn btn-primary btn-sm">editar </a>
+
       {% if article.status == Article.ACCEPTED %}
         <span class="badge bg-success">approved</span>
       {% elif article.status == Article.REJECTED %}

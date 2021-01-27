@@ -42,3 +42,8 @@ h1 {
     margin-left: 20%; 
     margin-right: 20%
 }
+
+.center {
+    text-align: center;
+    padding: 25px;
+}

@@ -1,0 +1,17 @@
+{% extends "blog/nav-base.html" %}
+{% load static %}
+
+{% block title %}
+  No Permission
+{% endblock %}
+
+
+{% block content %}
+    <h4 class="title-nav">No editor</h4>  
+    </nav>
+    <div class="center">
+        <img width="300" src="{% static 'images/block-user.svg'%}">
+
+        <h5>sorry you are not allowed, request permission from an administrator and come back later</h5>
+    </div>  
+{% endblock %}
