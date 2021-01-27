@@ -1,0 +1,22 @@
+{% extends "blog/nav-base.html" %}
+
+{% block titleTap %} Articles Edited {% endblock %}
+{% block title %} Articles Edited {% endblock %}
+
+{% block content %}
+
+  {% for a in articles %}
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">id: {{a.id}} - {{a.title}} by {{a.written_by}}</h5>
+
+      {% if a.status == 1 %}
+      approved
+      {% elif a.status == 2 %}
+      Rejected
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+
+{% endblock %}

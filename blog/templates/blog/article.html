@@ -1,73 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "blog/nav-base.html" %} 
+{% block titleTap %} Articles Editor{% endblock %}
+{% block title %} Articles Editor{% endblock %}
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block content %} 
 
-  <link rel="stylesheet" href="/static/blogtoy/style.css">
-  <title>Document</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
-    crossorigin="anonymous"></script>
-
-</head>
-
-<body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/">Blog</a>
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="/article">article </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/article-approval">article-approval</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/articles-edited">articles-edited</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/logout">logout</a>
-      </li>
-    </ul>
-    <span style="margin-left: 50px;" class="navbar-text">
-      {{user}}
-    </span>
-  </nav>
-  <br>
-  <h1>Article Editor </h1>
-
-  {% if article%}
-  created = {{article.created_at}}
-  title = {{article.title}}
-  content = {{article.content}}
-  status = {{article.status}}
-  written_by = {{article.written_by}}
-  edited_by = {{article.edited_by}}
-
+  {% if article %} 
+  created = {{article.created_at}} title =
+  {{article.title}} content = {{article.content}} status = {{article.status}}
+  written_by = {{article.written_by}} edited_by = {{article.edited_by}} 
   {% endif %}
 
-
-</body>
-
-<div class='jumbotron'>
-  <br>
-  <h5> Form</h5>
-
-  <form style="padding-left: 20%; padding-right: 20%;" method="post" action="{{id}}">
-    {% csrf_token %}
-    {% for field in form %}
-    <div class='form-group'>
+  <form class="article-form" method="post" action="{{id}}">
+    {% csrf_token %} {% for field in form %}
+    <div class="form-group">
       <label for="{{ field.name }}">{{ field.label }}</label>
-      <br>
+      <br />
       {{ field }}
     </div>
-    <!-- {{ form }} -->
     {% endfor %}
-    <button class="btn btn-success" type="submit"> Save</button>
+    <button class="btn btn-success" type="submit">Save</button>
   </form>
-</div>
 
-</html>
+{% endblock %}

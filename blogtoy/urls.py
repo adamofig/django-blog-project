@@ -15,17 +15,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from blog.views import welcome, articles, login_user, article_approval, logout_user, approve_article, articles_edited, reject_article
+from blog.views import get_dashboard, articles, login_user, article_approval, logout_user, approve_article, article_edited, reject_article
+
+handler404 = 'blog.views.handler404'
+
 
 urlpatterns = [
-    path('', welcome),
-    path('login', login_user),
-    path('logout', logout_user),
+    path('', get_dashboard, name="dashboard"),
     path('blog', include('blog.urls')),
+
+    path('login', login_user, name='login'),
+    path('logout', logout_user, name='logout'),
     path('article/<int:id>', articles),
-    path('article', articles),
-    path('article-approval', article_approval),
-    path('articles-edited', articles_edited),
+    path('article', articles, name='article'),
+    path('article-approval', article_approval, name='article-approval'),
+    path('article-edited', article_edited, name='article-edited'),
     path('approve/<int:id>', approve_article),
     path('reject/<int:id>', reject_article),
     path('admin/', admin.site.urls),

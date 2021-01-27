@@ -1,0 +1,14 @@
+{% extends "blog/base1.html" %} 
+
+{% load static %}
+
+{% block contentbody %}
+    <nav class="navbar navbar-dark bg-primary">Error</nav>
+    Hola Error en el documento, no se encontró 
+
+      {% comment %} <img class="logo" src="{% static 'images/linkgraph.png' %}"> {% endcomment %}
+
+        <img src="{% static 'images/error.png'%}">
+
+
+{% endblock %}

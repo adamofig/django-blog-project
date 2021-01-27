@@ -1,71 +1,31 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
+{% extends "blog/nav-base.html" %}
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>App Toy</title>
+{% block title %}
+  Dashboard
+{% endblock %}
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-  integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
-  crossorigin="anonymous"></script>
-  
-</head>
+{% block content %}
 
-<body>
-
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/">Blog</a>
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="/article">article </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/article-approval">/article-approval</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/articles-edited">/articles-edited</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/logout">/logout</a>
-      </li>
-    </ul>
-  </nav>
-
-  <br>
-  <h1>Welcome to Blog</h1>
-
-  <br><br>
-  <h5>Details</h5>
-
-  <link rel="stylesheet" href="{% static 'blogtoy/style.css' %}">
-  <div class="card">
-    <div class="card-body">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Writer</th>
-            <th>Total Articles Written</th>
-            <th>Total Articles Written Last 30</th>
-          </tr>
-        </thead>
-        <tbody>
-          {%for a in writer_info%}
-          <tr>
-            <td>{{a.written_by}}</td>
-            <td>{{a.total}}</td>
-            <td>{{a.last_30_days}}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+<div class="card">
+  <div class="card-body">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Writer</th>
+          <th>Total Articles Written</th>
+          <th>Total Articles Written Last 30</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%for a in writer_info%}
+        <tr>
+          <td>{{a.written_by}}</td>
+          <td>{{a.total}}</td>
+          <td>{{a.last_30_days}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
-
-
-</body>
-
-</html>
+</div>
+{% endblock %}

@@ -1,16 +1,19 @@
-from django.http import HttpResponse
-from django.shortcuts import render
-from .models import Article, Writer
-from django.db.models import Count
-from django.db.models import Q
-from django.http import HttpResponseRedirect
 import datetime
+
+from django.contrib import messages
 from django.contrib.auth import authenticate, logout, login
+from django.db.models import Count, Q
+from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import render
 
 from .forms import ArticleForm
+from .models import Article, Writer
 
 
-def welcome(request):
+def get_dashboard(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect('login')
+
     last_30_days = Count(
         'written_by', filter=Q(created_at__gt=datetime.datetime(2021, 1, 1)))
     writer_info = Article.objects.values('written_by').annotate(
@@ -23,20 +26,19 @@ def welcome(request):
 
 def articles(request, id=None):
     if not request.user.is_authenticated:
-        return HttpResponse(
-            "Unauthorized! <a href='/login'> please login </a>")
+        return HttpResponseRedirect('login')
 
     if request.method == 'POST':
         form = ArticleForm(request.POST)
         if id is None:
-            form.save(request.user.username)
+            form.save(request.user)
         else:
             Article.objects.filter(pk=id).update(
                 title=form.data["title"],
                 content=form.data["content"],
                 edited_by=request.user.username)
-
         return HttpResponseRedirect('/article')
+   
     elif id is None:
         form = ArticleForm()
         return render(request, "blog/article.html", {
@@ -59,17 +61,14 @@ def articles(request, id=None):
 
 def article_approval(request):
     if not request.user.is_authenticated:
-        return HttpResponse(
-            "Unauthorized! <a href='/login'> please login </a>")
-
-    id = request.user.id
+        return HttpResponseRedirect('login')
     try:
-        writer = Writer.objects.get(id_user=id)
+        writer = Writer.objects.get(user=request.user)
         if not writer.is_editor:
             return HttpResponse(
                 "Sorry, You need editor permission <a href='/'> return </a>")
 
-        articles = Article.objects.filter(status=0)
+        articles = Article.objects.filter(status=Article.PENDING)
         return render(request, "blog/article-approval.html", {
             "user": request.user,
             "articles": articles
@@ -81,28 +80,31 @@ def article_approval(request):
         )
 
 
-def articles_edited(request):
+def article_edited(request):
     if not request.user.is_authenticated:
-        return HttpResponse(
-            "Unauthorized! <a href='/login'> please login </a>")
+        return HttpResponseRedirect('login')
 
-    id = request.user.id
+    user_id = request.user.id
     try:
-        writer = Writer.objects.get(id_user=id)
+        writer = Writer.objects.get(user=user_id)
         if not writer.is_editor:
             return HttpResponse(
                 "Sorry, You need editor permission <a href='/'> return </a>")
 
         articles = Article.objects.exclude(status=0)
 
-        return render(request, "blog/articles-edited.html",
+        return render(request, "blog/article-edited.html",
                       {"articles": articles})
     except Exception as e:
         print(e)
+        print("Tenemos aquí un error", e)
         return HttpResponse("Unexpetected Error")
 
 
 def approve_article(request, id):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect('login')
+
     Article.objects.filter(pk=id).update(status=1)
     return HttpResponseRedirect('/article-approval')
 
@@ -117,12 +119,20 @@ def login_user(request):
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
-        login(request, user)
+        print("user", user)
+        if user is not None:
+            login(request, user)
 
-        if user is None:
-            return HttpResponse("Unauthorized!")
+            if user is None:
+                return HttpResponse("Unauthorized!", )
+            else:
+                # return HttpResponseRedirect('login')
+                return HttpResponseRedirect('/')
         else:
-            return HttpResponseRedirect('/')
+            messages.error(request, 'Username or password not correct')
+            return HttpResponseRedirect('login')
+            # return HttpResponse("User not Existe ")
+
     else:
         return render(request, "blog/login.html")
 
@@ -130,3 +140,8 @@ def login_user(request):
 def logout_user(request):
     logout(request)
     return HttpResponseRedirect('/login')
+
+
+def handler404(request, exception):
+    print(":::::::::::::::::::::")
+    return render(request, 'blog/404.html')
