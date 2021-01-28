@@ -16,10 +16,9 @@ class GenericTest(TestCase):
                                  password='glass onion')
 
     def test_create_user(self):
-        user = User.objects.get(username="john")
-        user = User.objects.create_user(username='hey',
-                                        email='jlennon@beatles.com',
-                                        password='glass onion')
+        User.objects.create_user(username='adamo',
+                                 email='adamo@yo.com',
+                                 password='glass onion')
 
     def test_save_model_writer(self):
         writer = Writer()
@@ -39,5 +38,5 @@ class GenericTest(TestCase):
         user = User.objects.get(username="john")
         writer = Writer(name="newuser", is_editor=True, user=user)
         writer.save()
-        writer_obj = Writer.objects.get(pk=1)
+        writer_obj = Writer.objects.get(pk=writer.id)
         self.assertEqual(writer, writer_obj)

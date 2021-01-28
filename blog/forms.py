@@ -16,11 +16,9 @@ class ArticleForm(forms.Form):
     )
 
     def save(self, writer):
-        created_at = datetime.now()
         article = Article(
             title=self.data["title"],
             content=self.data["content"],
-            created_at=created_at,
             written_by=writer,
         )
         article.save()

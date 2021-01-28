@@ -17,8 +17,9 @@ def get_dashboard(request):
     date_filter = datetime.today() - timedelta(days=30)
     last_30_days = Count('written_by', filter=Q(created_at__gt=date_filter))
 
-    writer_info = Article.objects.values('written_by').annotate(
-        last_30_days=last_30_days).annotate(total=Count('written_by'))
+    writer_info = Article.objects.select_related("written_by__name").values(
+        'written_by__name').annotate(total=Count('written_by__name')).annotate(
+        last_30_days=last_30_days)
 
     return render(request, "blog/dashboard.html", {
         "articles": articles,
