@@ -17,11 +17,11 @@
         </tr>
       </thead>
       <tbody>
-        {%for a in writer_info%}
+        {%for data in writer_info%}
         <tr>
-          <td>{{a.written_by}}</td>
-          <td>{{a.total}}</td>
-          <td>{{a.last_30_days}}</td>
+          <td>{{data.written_by}}</td>
+          <td>{{data.total}}</td>
+          <td>{{data.last_30_days}}</td>
         </tr>
         {% endfor %}
       </tbody>
