@@ -1,9 +1,15 @@
 {% extends "blog/base.html" %} 
-
 {% load static %}
+
+{% block title %}
+  Error 404
+{% endblock %}
 
 {% block contentbody %}
     <nav class="navbar navbar-dark bg-primary"> Error 404</nav>
-    <h5> Not Found Page </h5>    
-    <img src="{% static 'images/error.png'%}">
+
+    <div class="center">
+        <img width="300" src="{% static 'images/error.png'%}">
+        <h5>Not Found </h5>
+    </div>      
 {% endblock %}

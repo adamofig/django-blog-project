@@ -1,25 +1,43 @@
 from django.test import TestCase
+from django.contrib.auth import get_user_model
+
+
 from .models import Writer, Article
-from datetime import datetime
+
+
+User = get_user_model()
 
 
 class GenericTest(TestCase):
 
-    def test_create_write_default_status(self):
-        article = Article.objects.create(title='Big', content="content",
-                                         created_at=datetime.now())
-        self.assertEqual(article.status, 0)
+    def setUp(self):
+        User.objects.create_user(username='john',
+                                 email='jlennon@beatles.com',
+                                 password='glass onion')
 
-    def test_save_model_writter(self):
+    def test_create_user(self):
+        user = User.objects.get(username="john")
+        user = User.objects.create_user(username='hey',
+                                        email='jlennon@beatles.com',
+                                        password='glass onion')
+
+    def test_save_model_writer(self):
         writer = Writer()
-        writer.name = "newuser"
+        writer.name = "johnas"
         writer.is_editor = True
-        writer.id_user = None
+        writer.user = User.objects.get(username="john")
         writer.save()
 
-    def test_get_writter(self):
+    def test_full_article_process(self):
+        user = User.objects.get(username="john")
+        writer = Writer.objects.create(name='john writer', user=user)
+        article = Article.objects.create(
+            title='Big', content="content", written_by=writer)
+        self.assertEqual(article.status, Article.PENDING)
 
-        writer = Writer(name="newuser", is_editor=True, id_user=None)
+    def test_get_writter(self):
+        user = User.objects.get(username="john")
+        writer = Writer(name="newuser", is_editor=True, user=user)
         writer.save()
         writer_obj = Writer.objects.get(pk=1)
         self.assertEqual(writer, writer_obj)
