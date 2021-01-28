@@ -43,8 +43,8 @@ name
 https://docs.djangoproject.com/en/3.1/topics/auth/default/
 For authenticate with user a pass
 
-### Handle Page Not Found. 
+* Handle Page Not Found. 
 https://medium.com/@yildirimabdrhm/python-django-handling-custom-error-page-807087352bea
 
-### Pipes 
+* Pipes 
 https://help.klaviyo.com/hc/en-us/articles/115005257788-How-to-Format-Date-Variables-in-Templates
