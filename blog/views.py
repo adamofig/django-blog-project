@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+from django.core.exceptions import ObjectDoesNotExist
 
 from .forms import ArticleForm
 from .models import Article, Writer
@@ -29,13 +30,14 @@ def get_dashboard(request):
 def articles(request, id=None):
     if request.method == 'POST':
         form = ArticleForm(request.POST)
+        writer = Writer.objects.get(id=request.session['writer_id'])
         if id is None:
-            form.save(request.user)
+            form.save(writer)
         else:
             Article.objects.filter(pk=id).update(
                 title=form.data["title"],
                 content=form.data["content"],
-                edited_by=request.user)
+                edited_by=writer)
         return HttpResponseRedirect('/article')
 
     elif id is None:
@@ -102,11 +104,17 @@ def login_user(request):
         password = request.POST['password']
         user = authenticate(username=username, password=password)
 
-        print(user)
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect("/")
-
+            try:
+                writer = Writer.objects.get(user=request.user)
+                request.session['writer_id'] = writer.id
+                return HttpResponseRedirect("/")
+            except ObjectDoesNotExist:
+                messages.error(
+                    request,
+                    'The user is auth but is not registered as a writer')
+                return HttpResponseRedirect('login')
         else:
             messages.error(request, 'Username or password are not correct')
             return HttpResponseRedirect('login')

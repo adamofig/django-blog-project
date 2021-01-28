@@ -15,12 +15,12 @@ class ArticleForm(forms.Form):
         widget=forms.Textarea(attrs={"class": "form-control"}),
     )
 
-    def save(self, user):
+    def save(self, writer):
         created_at = datetime.now()
         article = Article(
             title=self.data["title"],
             content=self.data["content"],
             created_at=created_at,
-            written_by=user,
+            written_by=writer,
         )
         article.save()

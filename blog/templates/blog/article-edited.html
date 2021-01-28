@@ -5,13 +5,20 @@
 
 {% block content %}
 
+  {% if articles.count == 0 %}
+  <div class="alert alert-info" role="alert">
+    <h5>There are no articles approved or rejected</h5>
+  </div>
+  {% endif %} 
+
+
   {% for article in articles %}
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">id: {{article.id}} - {{article.title}} by {{article.written_by}}
        <span class="float-right">edited {{article.modified_at|date:'m-d-Y H:i'}} </span>
       </h5>
-      <a href="{% url 'article-edit' article.pk %}" class="btn btn-primary btn-sm">editar </a>
+      <a href="{% url 'article-edit' article.pk %}" class="btn btn-primary btn-sm">edit </a>
 
       {% if article.status == Article.ACCEPTED %}
         <span class="badge bg-success">approved</span>
